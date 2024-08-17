@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Retro Horror</title>
+    <style>
+        body {
+            background: url('https://www.transparenttextures.com/patterns/asfalt-dark.png'), black;
+            color: lime;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" style="font-size: 24px"><text y="24">🔪</text></svg>'), auto;
+            animation: pulsate 4s ease-in-out infinite;
+        }
+        h1 {
+            font-size: 5em;
+            margin-top: 20vh;
+            animation: flicker 1.5s infinite alternate;
+        }
+        p {
+            font-size: 2em;
+            margin: 20px;
+            animation: flicker 3s infinite alternate;
+        }
+        @keyframes flicker {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        .glitch {
+            position: relative;
+            color: lime;
+            font-size: 5em;
+            animation: glitch 1s infinite;
+        }
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+        }
+        .glitch::before {
+            animation: glitchTop 1s infinite;
+            top: -2px;
+            color: red;
+        }
+        .glitch::after {
+            animation: glitchBottom 1s infinite;
+            top: 2px;
+            color: blue;
+        }
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+        @keyframes glitchTop {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, -2px); }
+            40% { transform: translate(-2px, 2px); }
+            60% { transform: translate(2px, -2px); }
+            80% { transform: translate(2px, 2px); }
+            100% { transform: translate(0); }
+        }
+        @keyframes glitchBottom {
+            0% { transform: translate(0); }
+            20% { transform: translate(2px, 2px); }
+            40% { transform: translate(2px, -2px); }
+            60% { transform: translate(-2px, 2px); }
+            80% { transform: translate(-2px, -2px); }
+            100% { transform: translate(0); }
+        }
+        .background-sound {
+            display: none;
+        }
+        /* New styles for RPG dialog */
+        .dialog-box {
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 2px solid #fff;
+            padding: 10px;
+            margin-top: 20px;
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+            color: red;
+            font-family: 'Courier New', Courier, monospace;
+            animation: flicker 2s infinite alternate;
+        }
+        .dialog-box p {
+            position: relative;
+            animation: glitch 1s infinite;
+        }
+        .dialog-box p::before, .dialog-box p::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0;
+        }
+        .dialog-box p::before {
+            animation: glitchTop 1s infinite;
+            top: -2px;
+            color: darkred;
+        }
+        .dialog-box p::after {
+            animation: glitchBottom 1s infinite;
+            top: 2px;
+            color: darkred;
+        }
+        
+        /* New styles for ghost animation */
+        .ghost {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12px;
+            color: lime;
+            opacity: 0;
+            animation: ghostAppear 10s infinite;
+            white-space: pre;
+        }
+
+        @keyframes ghostAppear {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        /* New styles for flickering light */
+        .flicker-light {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            pointer-events: none;
+            animation: flickerLight 0.1s infinite;
+        }
+
+        @keyframes flickerLight {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* New styles for blood dripping effect */
+        .blood-drip {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 2px;
+            height: 100px;
+            background: red;
+            animation: drip 2s infinite;
+        }
+
+        @keyframes drip {
+            0% { top: 0; opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        /* New styles for creepy text */
+        .creepy-text {
+            font-size: 3em;
+            color: red;
+            animation: creepyFlicker 1s infinite alternate;
+        }
+
+        @keyframes creepyFlicker {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        /* New styles for moving ghost */
+        .moving-ghost {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 12px;
+            color: lime;
+            opacity: 0;
+            animation: moveGhost 10s infinite;
+            white-space: pre;
+        }
+
+        @keyframes moveGhost {
+            0%, 100% { opacity: 0; transform: translate(-50%, -50%); }
+            50% { opacity: 1; transform: translate(-50%, -60%); }
+        }
+
+        /* New styles for random text */
+        .random-text {
+            position: absolute;
+            font-size: 2em;
+            color: red;
+            animation: randomTextAppear 5s infinite;
+        }
+
+        @keyframes randomTextAppear {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        /* New styles for blood splatter */
+        .blood-splatter {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background-image: url('https://www.transparenttextures.com/patterns/blood-splatter.png');
+            opacity: 0.3;
+            animation: fadeInOut 10s infinite;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* New styles for jump scare */
+        .jump-scare {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('walawee.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        /* New styles for shaking effect */
+        .shake {
+            animation: shake 0.5s infinite;
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+
+        /* New style for distorted images */
+        .distorted-image {
+            position: fixed;
+            opacity: 0;
+            transition: opacity 0.5s;
+            filter: blur(2px) contrast(150%) hue-rotate(45deg) invert(75%);
+            animation: distort 3s infinite alternate;
+            z-index: 1000;
+        }
+
+        @keyframes distort {
+            0% { filter: blur(2px) contrast(150%) hue-rotate(45deg) invert(75%); }
+            100% { filter: blur(4px) contrast(200%) hue-rotate(90deg) invert(100%); }
+        }
+
+        /* New style for floating text */
+        .floating-text {
+            position: absolute;
+            font-size: 1.5em;
+            color: #ff0000;
+            text-shadow: 2px 2px 4px #000000;
+            animation: float 5s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* New style for blood dripping text */
+        .blood-text {
+            color: #8a0303;
+            text-shadow: 0 0 5px #ff0000;
+            animation: drip 2s infinite;
+        }
+
+        @keyframes drip {
+            0% { text-shadow: 0 0 5px #ff0000; }
+            50% { text-shadow: 0 5px 5px #ff0000; }
+            100% { text-shadow: 0 0 5px #ff0000; }
+        }
+
+        /* New style for pulsating background */
+        .pulsate {
+            animation: pulsate 4s ease-in-out infinite;
+        }
+
+        @keyframes pulsate {
+            0%, 100% { background-color: rgba(0, 0, 0, 0.8); }
+            50% { background-color: rgba(50, 0, 0, 0.8); }
+        }
+
+        /* New style for creepy cursor */
+        body {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" style="font-size: 24px"><text y="24">🔪</text></svg>'), auto;
+        }
+
+        /* New style for demonic symbols */
+        .demonic-symbol {
+            position: fixed;
+            font-size: 3em;
+            color: #ff0000;
+            opacity: 0.7;
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* New style for subliminal messages */
+        .subliminal {
+            position: fixed;
+            font-size: 1em;
+            color: #ffffff;
+            opacity: 0;
+            animation: flash 0.1s infinite;
+        }
+
+        @keyframes flash {
+            0%, 99% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        /* New style for creepy video background */
+        #creepy-video {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1000;
+            opacity: 0.3;
+        }
+
+        /* Loading screen styles */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #ff0000;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .loading-text {
+            font-size: 3em;
+            animation: creepyFlicker 1s infinite alternate;
+        }
+
+        .creator-name {
+            font-size: 1.5em;
+            margin-top: 20px;
+            color: #8a0303;
+            text-shadow: 0 0 5px #ff0000;
+        }
+
+        .loading-bar {
+            width: 200px;
+            height: 20px;
+            background-color: #1a0000;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading-progress {
+            width: 0;
+            height: 100%;
+            background-color: #ff0000;
+            animation: fillBar 5s linear forwards;
+        }
+
+        @keyframes fillBar {
+            0% { width: 0; }
+            100% { width: 100%; }
+        }
+
+        .blood-drip {
+            position: absolute;
+            top: 0;
+            width: 2px;
+            height: 0;
+            background-color: #ff0000;
+            animation: drip 2s infinite;
+        }
+
+        @keyframes drip {
+            0% { height: 0; }
+            100% { height: 100%; }
+        }
+
+        /* Mobile-friendly adjustments */
+        @media (max-width: 768px) {
+            body {
+                font-size: 14px;
+            }
+
+            h1 {
+                font-size: 2em;
+                margin-top: 10vh;
+            }
+            
+            p {
+                font-size: 1em;
+                margin: 10px;
+            }
+            
+            .dialog-box {
+                width: 90%;
+                max-width: none;
+                font-size: 0.9em;
+                padding: 5px;
+            }
+            
+            .ghost, .moving-ghost {
+                font-size: 8px;
+            }
+            
+            .random-text {
+                font-size: 0.8em;
+            }
+            
+            .floating-text {
+                font-size: 0.8em;
+            }
+            
+            .demonic-symbol {
+                font-size: 1.2em;
+            }
+            
+            .subliminal {
+                font-size: 0.6em;
+            }
+            
+            .loading-text {
+                font-size: 1.2em;
+            }
+            
+            .creator-name {
+                font-size: 0.8em;
+            }
+            
+            .loading-bar {
+                width: 80%;
+                height: 15px;
+            }
+
+            .distorted-image {
+                max-width: 50px;
+                max-height: 50px;
+            }
+
+            .blood-drip {
+                width: 1px;
+            }
+
+            .creepy-text {
+                font-size: 1.5em;
+            }
+
+            .jump-scare img {
+                max-width: 100%;
+                height: auto;
+            }
+        }
+
+        /* New styles for better mobile landscape view */
+        @media (max-width: 812px) and (orientation: landscape) {
+            .content-wrapper {
+                min-height: auto;
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2em;
+                margin-top: 5vh;
+            }
+
+            p {
+                font-size: 1em;
+                margin: 5px 0;
+            }
+
+            .dialog-box {
+                width: 80%;
+                margin: 10px auto;
+            }
+
+            .random-text, .floating-text {
+                font-size: 0.8em;
+            }
+
+            .demonic-symbol {
+                font-size: 1.5em;
+            }
+
+            .distorted-image {
+                max-width: 30px;
+                max-height: 30px;
+            }
+        }
+
+        /* Adjust content wrapper for better layout */
+        .content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        /* Make sure images and elements don't overflow */
+        img, .random-text, .floating-text, .demonic-symbol, .distorted-image {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Ensure content is not hidden under notches or rounded corners */
+        @supports (padding: max(0px)) {
+            body {
+                padding-left: max(12px, env(safe-area-inset-left));
+                padding-right: max(12px, env(safe-area-inset-right));
+                padding-top: max(12px, env(safe-area-inset-top));
+                padding-bottom: max(12px, env(safe-area-inset-bottom));
+            }
+        }
+
+        .rotate-message {
+            display: none;
+            font-size: 1em;
+            color: #ff0000;
+            text-align: center;
+            margin-top: 20px;
+            animation: creepyFlicker 2s infinite alternate;
+        }
+
+        @media (max-width: 768px) and (orientation: portrait) {
+            .rotate-message {
+                display: block;
+            }
+        }
+
+        /* Ensure content is scrollable on mobile */
+        @media (max-width: 768px) {
+            .content-wrapper {
+                height: auto;
+                min-height: 100vh;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+
+        /* Style for scroll suggestion */
+        .scroll-suggestion {
+            font-size: 0.9em;
+            color: #8a0303;
+            margin-top: 10px;
+            animation: creepyFlicker 2s infinite alternate;
+        }
+    </style>
+</head>
+<body class="pulsate">
+    <!-- Loading screen -->
+    <div class="loading-screen">
+        <div class="loading-text">Entering Your Nightmare...</div>
+        <div class="loading-bar">
+            <div class="loading-progress"></div>
+        </div>
+        <div class="creator-name">Created by Haegel_ (DimsTheNaspadGuy)</div>
+        <div class="rotate-message">Please rotate your device horizontally for the best experience</div>
+        <div class="scroll-suggestion">Scroll to explore the depths of your nightmare...</div>
+        <div class="blood-drip" style="left: 10%;"></div>
+        <div class="blood-drip" style="left: 30%;"></div>
+        <div class="blood-drip" style="left: 50%;"></div>
+        <div class="blood-drip" style="left: 70%;"></div>
+        <div class="blood-drip" style="left: 90%;"></div>
+    </div>
+
+    <div class="content-wrapper">
+        <div class="blood-drip"></div>
+        <h1 class="glitch blood-text" data-text="WELCOME TO YOUR NIGHTMARE">WELCOME TO YOUR NIGHTMARE</h1>
+        <p class="creepy-text blood-text">There's no escape from this eternal torment</p>
+        <audio class="background-sound" autoplay loop>
+            <source src="https://www.soundjay.com/horror/sounds/horror-ambient-1.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        <audio class="background-sound" autoplay loop>
+            <source src="https://www.soundjay.com/horror/sounds/scream-1.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        <audio id="whisper" src="https://example.com/whisper.mp3"></audio>
+        <audio id="creaking" src="https://example.com/creaking.mp3"></audio>
+        <audio id="heartbeat" src="https://example.com/heartbeat.mp3"></audio>
+        <pre>
+                                                                                
+                                                                                
+                                                                                
+                               .      ,/*    /.                                 
+                         *@@@@@@&/&&&&/%@@@@@@@@@@@(                            
+                    , @@@@@@@@@@@@@@@@@@(//%@@@@@@@@@@@         %%              
+                   @@@@@@@@*&&@@@@@@@@@@@@@@@@(#@@@@@@@@@/@.           &%       
+         ##      @@@@@@@@*@@@@@@@@* ...,,,,,,.. ,/@@@@@@@@@#&&        *&&&      
+               @@@@@@@@@(@@/.%,,,,,,,,,,,,,,,,,,,,,.@@@@@@@@@/&&     @#&&%      
+     &%%     ,@/@@@@@@% (####.,,,,,,,,,,,,,,,,,,,,,,.@@@@@@@@@/&&  @&@@@@    / 
+    &@@@%  . @@@@@@@@#,,,##%%.%%  (@@@@@@&@@@@@@@@@@@@.@@@@@@@@@/&& @@%/@###&%% 
+           @@@@@@@@@@.,,..  @%@@@@@@@@@@@@@@@@@@@@@@@@@,@@@@@@@@@@/ @/@@@@%@#@  
+         @@@@@@@@@@@ ,.,@@@@@&@@@@@@@@@@@@@&@@@@@@@@@@@%@@@@@@@@@@@##(@@@@#&   
+       &@@@@@@@@@@@@.@@@@@@@..@@@@@@@@@@@@&@(@@@@@@@@@@@*@@@@@@@@&@@  **..,     
+      @@@@/&@@@@@@@/@@@@@@@(% @@@@@@@@@@@@@@@./@&%&@@@@@/@@@@@@@@@(&@ ,, *.     
+     @@@@/%@@@@@@@@*@@&@%@,%%%,@#@@@@@@@@@&@@ %%.@@@@@%@&&@@@@@@@@@%%(.,,,.     
+     @@@ &%@@@@@@@@(@%&@@ %%@&%(@#@@@@@@@@%%&/&@@&.,&@@@@&@@@@@@@@@(&% ,,       
+    @@@  &&@@@@@&&@@@#&#.......(.@%.@@@%@&@.//.,,.......,@&&&&&&&&&(%&  *       
+    .@(  &&(&&&&&&&&(#....,,*/,,,#.@&%.@&@@.,.(&*(,,@#,..&&&%&&&&&%%%% , **     
+     @   (&%(&&&&&&&&.,@@&@%%&##@@@@@.%@@@@(##&%#%#&@/.@@@#&&&&&&*%%% ,,       
+         .*%%#&&&&&&&@.@@(&@@&@@%@@@@@@@@@@@@%@@@@@(@.@@@..&&&&&&..&%   ,,..    
+        ,&&,&%%. &&&&@@%(&@&&&@@@@@@@@@@@@@@@@@@@@@@@&. %.... &&&&&,(, ( &          
+       /&&&&&..%.&%.%@@@@@..@@@@@@@@&@@@@%&@@@@@@@@@@@@@@,*# &&&@ &&& #&&&#         
+     ,&&&&&& %%%%%%%%%##% #@@@@@@@@@@@@@@@@@@@@@@@@..###.(  ,&&&&&&.,&&&&&   #    
+    <div class="dialog-box">
+        <p data-text="Kamu tidak akan pernah keluar dari sini...">"Kamu tidak akan pernah keluar dari sini..."</p>
+    </div>
+    <!-- New moving ghost element -->
+    <div class="moving-ghost">
+        <pre>
+            .-.
+           (o o) boo!
+           | O \
+            \   \
+             `~~~'
+        </pre>
+    </div>
+    <!-- New random text element -->
+    <div class="random-text" style="position: relative; margin: 10px 0;">Beware...</div>
+    <div class="random-text" style="position: relative; margin: 10px 0;">I'm watching you...</div>
+    <!-- Add blood splatter effect -->
+    <div class="blood-splatter"></div>
+    <!-- Add jump scare element -->
+    <div class="jump-scare"></div>
+    <!-- Add more creepy messages -->
+    <div class="random-text" style="position: relative; margin: 10px 0;">Run while you can...</div>
+    <div class="random-text" style="position: relative; margin: 10px 0;">There's no escape...</div>
+    <!-- Add distorted images -->
+    <img src="https://example.com/creepy-face1-small.jpg" class="distorted-image" style="max-width: 50px; max-height: 50px; margin: 10px;">
+    <img src="https://example.com/creepy-face2-small.jpg" class="distorted-image" style="max-width: 50px; max-height: 50px; margin: 10px;">
+    <!-- Add floating text -->
+    <div class="floating-text" style="position: relative; margin: 10px 0;">You can't hide</div>
+    <div class="floating-text" style="position: relative; margin: 10px 0;">Forever trapped</div>
+    <!-- Add creepy video background -->
+    <video id="creepy-video" autoplay muted loop>
+        <source src="https://example.com/creepy-background.mp4" type="video/mp4">
+    </video>
+    <!-- Add demonic symbols -->
+    <div class="demonic-symbol" style="position: fixed; left: 10%; top: 10%;">☠️</div>
+    <div class="demonic-symbol" style="position: fixed; right: 10%; bottom: 10%;">👹</div>
+    <!-- Add subliminal messages -->
+    <div class="subliminal" style="position: fixed; left: 50%; top: 50%;">YOU ARE DOOMED</div>
+    <div class="subliminal" style="position: fixed; right: 20%; top: 30%;">NO HOPE</div>
+    <script>
+        // Function to trigger jump scare
+        function jumpScare() {
+            const jumpScareElement = document.querySelector('.jump-scare');
+            jumpScareElement.style.opacity = '1';
+            setTimeout(() => {
+                jumpScareElement.style.opacity = '0';
+            }, 200);
+            const screamSound = new Audio('https://example.com/loud-scream.mp3');
+            screamSound.play();
+        }
+
+        // Trigger jump scare randomly
+        setInterval(() => {
+            if (Math.random() < 0.1) { // 10% chance every 5 seconds
+                jumpScare();
+            }
+        }, 5000);
+
+        // Add shaking effect to body randomly
+        setInterval(() => {
+            if (Math.random() < 0.2) { // 20% chance every 10 seconds
+                document.body.classList.add('shake');
+                setTimeout(() => {
+                    document.body.classList.remove('shake');
+                }, 500);
+            }
+        }, 10000);
+
+        // Enhanced function to play random scary sounds
+        const scaryAudios = [
+            'https://www.soundjay.com/horror/sounds/horror-scream-1.mp3',
+            'https://www.soundjay.com/horror/sounds/horror-scream-2.mp3',
+            'https://www.soundjay.com/horror/sounds/horror-scream-3.mp3',
+            document.getElementById('whisper').src,
+            document.getElementById('creaking').src,
+            document.getElementById('heartbeat').src
+        ];
+
+        function playRandomScarySound() {
+            const audio = new Audio(scaryAudios[Math.floor(Math.random() * scaryAudios.length)]);
+            audio.volume = Math.random() * 0.5 + 0.5; // Random volume between 0.5 and 1
+            audio.play();
+        }
+
+        // Play sounds more frequently
+        setInterval(playRandomScarySound, 8000);
+
+        // Function to show random distorted images
+        function showRandomDistortedImage() {
+            const images = document.querySelectorAll('.distorted-image');
+            const randomImage = images[Math.floor(Math.random() * images.length)];
+            randomImage.style.opacity = '0.7';
+            setTimeout(() => {
+                randomImage.style.opacity = '0';
+            }, 1000);
+        }
+
+        setInterval(showRandomDistortedImage, 8000); // Show a random distorted image every 8 seconds
+
+        // Function to create whisper effect
+        function createWhisper() {
+            const whisper = document.createElement('div');
+            whisper.textContent = 'Can you hear me?';
+            whisper.style.position = 'fixed';
+            whisper.style.color = '#ffffff';
+            whisper.style.fontSize = '12px';
+            whisper.style.opacity = '0';
+            whisper.style.transition = 'opacity 2s';
+            whisper.style.left = Math.random() * 100 + '%';
+            whisper.style.top = Math.random() * 100 + '%';
+            document.body.appendChild(whisper);
+
+            setTimeout(() => {
+                whisper.style.opacity = '1';
+            }, 100);
+
+            setTimeout(() => {
+                whisper.style.opacity = '0';
+                setTimeout(() => {
+                    whisper.remove();
+                }, 2000);
+            }, 3000);
+        }
+
+        setInterval(createWhisper, 10000); // Create a whisper effect every 10 seconds
+
+        // New function to create floating eyeballs
+        function createFloatingEyeball() {
+            const eyeball = document.createElement('div');
+            eyeball.innerHTML = '👁️';
+            eyeball.style.position = 'fixed';
+            eyeball.style.fontSize = '30px';
+            eyeball.style.left = Math.random() * 100 + '%';
+            eyeball.style.top = Math.random() * 100 + '%';
+            eyeball.style.animation = 'float 10s ease-in-out infinite';
+            document.body.appendChild(eyeball);
+
+            setTimeout(() => eyeball.remove(), 10000);
+        }
+
+        setInterval(createFloatingEyeball, 5000);
+
+        // New function to create blood splatters
+        function createBloodSplatter() {
+            const splatter = document.createElement('div');
+            splatter.style.position = 'fixed';
+            splatter.style.width = '50px';
+            splatter.style.height = '50px';
+            splatter.style.backgroundColor = '#8a0303';
+            splatter.style.borderRadius = '50%';
+            splatter.style.filter = 'blur(2px)';
+            splatter.style.opacity = '0.7';
+            splatter.style.left = Math.random() * 100 + '%';
+            splatter.style.top = Math.random() * 100 + '%';
+            document.body.appendChild(splatter);
+
+            setTimeout(() => {
+                splatter.style.transition = 'all 2s';
+                splatter.style.opacity = '0';
+                splatter.style.transform = 'scale(2)';
+                setTimeout(() => splatter.remove(), 2000);
+            }, 100);
+        }
+
+        setInterval(createBloodSplatter, 3000);
+
+        // New function to create creepy faces
+        function createCreepyFace() {
+            const face = document.createElement('div');
+            face.textContent = '👺';
+            face.style.position = 'fixed';
+            face.style.fontSize = '50px';
+            face.style.left = Math.random() * 100 + '%';
+            face.style.top = Math.random() * 100 + '%';
+            face.style.animation = 'float 5s ease-in-out infinite, glitch 0.5s infinite';
+            document.body.appendChild(face);
+
+            setTimeout(() => face.remove(), 3000);
+        }
+
+        setInterval(createCreepyFace, 7000);
+
+        // New function to create flickering text
+        function createFlickeringText() {
+            const text = document.createElement('div');
+            text.textContent = 'YOUR SOUL IS MINE';
+            text.style.position = 'fixed';
+            text.style.fontSize = '2em';
+            text.style.color = '#ff0000';
+            text.style.left = Math.random() * 80 + 10 + '%';
+            text.style.top = Math.random() * 80 + 10 + '%';
+            text.style.animation = 'flicker 0.5s infinite alternate';
+            document.body.appendChild(text);
+
+            setTimeout(() => text.remove(), 5000);
+        }
+
+        setInterval(createFlickeringText, 10000);
+
+        // Create a more intense shaking effect
+        function intenseShake() {
+            document.body.style.animation = 'shake 0.1s infinite';
+            setTimeout(() => {
+                document.body.style.animation = '';
+            }, 1000);
+        }
+
+        setInterval(() => {
+            if (Math.random() < 0.1) {
+                intenseShake();
+            }
+        }, 15000);
+
+        // Function to invert colors temporarily
+        function invertColors() {
+            document.body.style.filter = 'invert(100%)';
+            setTimeout(() => {
+                document.body.style.filter = '';
+            }, 500);
+        }
+
+        setInterval(invertColors, 20000);
+
+        // Loading screen logic
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                const loadingScreen = document.querySelector('.loading-screen');
+                loadingScreen.style.opacity = '0';
+                loadingScreen.style.transition = 'opacity 1s';
+                setTimeout(function() {
+                    loadingScreen.style.display = 'none';
+                }, 1000);
+            }, 5000); // Show loading screen for 5 seconds
+        });
+
+        // Improved function to adjust sizes for mobile devices
+        function adjustSizesForMobile() {
+            const isMobile = window.innerWidth <= 768;
+            const scale = isMobile ? 0.5 : 1;
+
+            document.querySelectorAll('.distorted-image').forEach(img => {
+                img.style.width = `${50 * scale}px`;
+                img.style.height = `${50 * scale}px`;
+            });
+            
+            document.querySelectorAll('.floating-text').forEach(text => {
+                text.style.fontSize = `${1 * scale}em`;
+            });
+
+            document.querySelectorAll('.random-text').forEach(text => {
+                text.style.fontSize = `${1.5 * scale}em`;
+            });
+
+            document.querySelectorAll('.demonic-symbol').forEach(symbol => {
+                symbol.style.fontSize = `${3 * scale}em`;
+            });
+
+            // Adjust positions of elements to prevent overlap
+            const elements = document.querySelectorAll('.random-text, .floating-text, .demonic-symbol, .distorted-image');
+            elements.forEach(el => {
+                el.style.left = `${Math.random() * 80 + 10}%`;
+                el.style.top = `${Math.random() * 80 + 10}%`;
+            });
+        }
+
+        // Call adjustSizesForMobile on load and resize
+        window.addEventListener('load', adjustSizesForMobile);
+        window.addEventListener('resize', adjustSizesForMobile);
+
+        // Adjust sizes periodically to ensure proper layout
+        setInterval(adjustSizesForMobile, 5000);
+
+        // Function to check orientation and show/hide rotate message
+        function checkOrientation() {
+            const rotateMessage = document.querySelector('.rotate-message');
+            if (window.innerHeight > window.innerWidth) {
+                rotateMessage.style.display = 'block';
+            } else {
+                rotateMessage.style.display = 'none';
+            }
+        }
+
+        // Check orientation on load and resize
+        window.addEventListener('load', checkOrientation);
+        window.addEventListener('resize', checkOrientation);
+
+        // Function to ensure content is scrollable on mobile
+        function ensureMobileScrolling() {
+            const contentWrapper = document.querySelector('.content-wrapper');
+            if (window.innerWidth <= 768) {
+                contentWrapper.style.height = 'auto';
+                contentWrapper.style.minHeight = '100vh';
+                contentWrapper.style.overflowY = 'auto';
+                contentWrapper.style.WebkitOverflowScrolling = 'touch';
+            } else {
+                contentWrapper.style.height = '';
+                contentWrapper.style.minHeight = '';
+                contentWrapper.style.overflowY = '';
+                contentWrapper.style.WebkitOverflowScrolling = '';
+            }
+        }
+
+        // Call ensureMobileScrolling on load and resize
+        window.addEventListener('load', ensureMobileScrolling);
+        window.addEventListener('resize', ensureMobileScrolling);
+    </script>
+</div>
+</body>
+</html>
